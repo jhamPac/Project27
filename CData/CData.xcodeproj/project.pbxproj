@@ -15,6 +15,8 @@
 		DA47F7621C765599008B274F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA47F7601C765599008B274F /* LaunchScreen.storyboard */; };
 		DA47F76A1C765648008B274F /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47F7691C765648008B274F /* SwiftyJSON.swift */; };
 		DA47F78E1C767492008B274F /* CData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DA47F78C1C767492008B274F /* CData.xcdatamodeld */; };
+		DAAAF1D51C77C3E400EC98CF /* Commit+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAAF1D31C77C3E400EC98CF /* Commit+CoreDataProperties.swift */; };
+		DAAAF1D61C77C3E400EC98CF /* Commit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAAF1D41C77C3E400EC98CF /* Commit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		DA47F7631C765599008B274F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA47F7691C765648008B274F /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		DA47F78D1C767492008B274F /* CData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CData.xcdatamodel; sourceTree = "<group>"; };
+		DAAAF1D31C77C3E400EC98CF /* Commit+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Commit+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DAAAF1D41C77C3E400EC98CF /* Commit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Commit.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +73,8 @@
 				DA47F7631C765599008B274F /* Info.plist */,
 				DA47F7691C765648008B274F /* SwiftyJSON.swift */,
 				DA47F78C1C767492008B274F /* CData.xcdatamodeld */,
+				DAAAF1D41C77C3E400EC98CF /* Commit.swift */,
+				DAAAF1D31C77C3E400EC98CF /* Commit+CoreDataProperties.swift */,
 			);
 			path = CData;
 			sourceTree = "<group>";
@@ -147,8 +153,10 @@
 			files = (
 				DA47F75A1C765599008B274F /* DetailViewController.swift in Sources */,
 				DA47F7581C765599008B274F /* MasterViewController.swift in Sources */,
+				DAAAF1D61C77C3E400EC98CF /* Commit.swift in Sources */,
 				DA47F7561C765599008B274F /* AppDelegate.swift in Sources */,
 				DA47F78E1C767492008B274F /* CData.xcdatamodeld in Sources */,
+				DAAAF1D51C77C3E400EC98CF /* Commit+CoreDataProperties.swift in Sources */,
 				DA47F76A1C765648008B274F /* SwiftyJSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -299,6 +307,7 @@
 				DA47F7681C765599008B274F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

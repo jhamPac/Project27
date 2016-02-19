@@ -14,6 +14,9 @@ class MasterViewController: UITableViewController {
     var detailViewController: DetailViewController? = nil
     var objects = [AnyObject]()
     var managedObjectContext: NSManagedObjectContext!
+    
+    // JSON related variables
+    let dateFormatISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
 
     override func viewDidLoad()
@@ -28,6 +31,7 @@ class MasterViewController: UITableViewController {
         }
         
         startCoreData()
+        performSelectorInBackground("fetchCommits", withObject: nil)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -52,6 +56,49 @@ class MasterViewController: UITableViewController {
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
+    }
+    
+    // MARK: - VC Methods
+    
+    func fetchCommits()
+    {
+        let gitHubURL = NSURL(string: "https://api.github.com/repos/apple/swift/commits?per_page=100")!
+        
+        if let data = NSData(contentsOfURL: gitHubURL)
+        {
+            let jsonCommits = JSON(data: data)
+            let jsonCommitArray = jsonCommits.arrayValue
+            
+            print("Received \(jsonCommitArray.count) new commits.")
+            
+            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+                for jsonCommit in jsonCommitArray
+                {
+                    if let commit = NSEntityDescription.insertNewObjectForEntityForName("Commit", inManagedObjectContext: self.managedObjectContext) as? Commit
+                    {
+                        self.configureCommit(commit, usingJSON: jsonCommit)
+                    }
+                }
+                
+                self.saveContext()
+            }
+        }
+    }
+    
+    func configureCommit(commit: Commit, usingJSON json: JSON)
+    {
+        commit.sha = json["sha"].stringValue
+        commit.message = json["commit"]["message"].stringValue
+        commit.url = json["html_url"].stringValue
+        
+        let formatter = NSDateFormatter()
+        formatter.timeZone = NSTimeZone(name: "UTC")
+        
+        // This means what format does this formater expect
+        formatter.dateFormat = dateFormatISO8601
+        
+        commit.date = formatter.dateFromString(json["commit"]["committer"]["date"].stringValue) ?? NSDate()
+        
     }
 
     // MARK: - Table View
@@ -90,9 +137,13 @@ class MasterViewController: UITableViewController {
     
     func startCoreData()
     {
+        // Get NSURL path of momd file; schema
         let modelURL = NSBundle.mainBundle().URLForResource("CData", withExtension: "momd")!
+        
+        // Create a object model with the contents of that momd file
         let managedObjectModel = NSManagedObjectModel(contentsOfURL: modelURL)!
         
+        // Create a persist coordinator using that object model
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         
         // Get a path to app sandbox sqlite file
@@ -100,6 +151,7 @@ class MasterViewController: UITableViewController {
         
         do
         {
+            // Try to add that store type with coordinator
             try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
             managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
             managedObjectContext.persistentStoreCoordinator = coordinator
