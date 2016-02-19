@@ -31,6 +31,7 @@ class MasterViewController: UITableViewController {
         }
         
         startCoreData()
+        loadSavedData()
         performSelectorInBackground("fetchCommits", withObject: nil)
     }
 
@@ -156,6 +157,9 @@ class MasterViewController: UITableViewController {
             try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
             managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
             managedObjectContext.persistentStoreCoordinator = coordinator
+            
+            // overite data base object if incoming object has same sha contraint; basically update if id match
+            managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         }
         catch
         {
