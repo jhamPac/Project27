@@ -12,7 +12,7 @@ import CoreData
 class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
-    var objects = [AnyObject]()
+    var objects = [Commit]()
     var managedObjectContext: NSManagedObjectContext!
     
     // JSON related variables
@@ -49,7 +49,7 @@ class MasterViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let object = objects[indexPath.row] as! NSDate
+                let object = objects[indexPath.row]
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
                 controller.detailItem = object
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
@@ -111,11 +111,12 @@ class MasterViewController: UITableViewController {
         return objects.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-
-        let object = objects[indexPath.row] as! NSDate
-        cell.textLabel!.text = object.description
+        let object = objects[indexPath.row]
+        cell.textLabel!.text = object.message
+        cell.detailTextLabel!.text = object.date.description
         return cell
     }
 
@@ -160,6 +161,26 @@ class MasterViewController: UITableViewController {
         {
             print("cant save data")
             return
+        }
+    }
+    
+    func loadSavedData()
+    {
+        let fetch = NSFetchRequest(entityName: "Commit")
+        let sort = NSSortDescriptor(key: "date", ascending: false)
+        fetch.sortDescriptors = [sort]
+        
+        do
+        {
+            if let commits = try managedObjectContext.executeFetchRequest(fetch) as? [Commit]
+            {
+                objects = commits
+                tableView.reloadData()
+            }
+        }
+        catch
+        {
+            print("Error")
         }
     }
     
