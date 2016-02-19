@@ -14,6 +14,7 @@
 		DA47F75F1C765599008B274F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA47F75E1C765599008B274F /* Assets.xcassets */; };
 		DA47F7621C765599008B274F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA47F7601C765599008B274F /* LaunchScreen.storyboard */; };
 		DA47F76A1C765648008B274F /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47F7691C765648008B274F /* SwiftyJSON.swift */; };
+		DA47F78E1C767492008B274F /* CData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DA47F78C1C767492008B274F /* CData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		DA47F7611C765599008B274F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DA47F7631C765599008B274F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA47F7691C765648008B274F /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		DA47F78D1C767492008B274F /* CData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CData.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				DA47F7601C765599008B274F /* LaunchScreen.storyboard */,
 				DA47F7631C765599008B274F /* Info.plist */,
 				DA47F7691C765648008B274F /* SwiftyJSON.swift */,
+				DA47F78C1C767492008B274F /* CData.xcdatamodeld */,
 			);
 			path = CData;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 				DA47F75A1C765599008B274F /* DetailViewController.swift in Sources */,
 				DA47F7581C765599008B274F /* MasterViewController.swift in Sources */,
 				DA47F7561C765599008B274F /* AppDelegate.swift in Sources */,
+				DA47F78E1C767492008B274F /* CData.xcdatamodeld in Sources */,
 				DA47F76A1C765648008B274F /* SwiftyJSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,6 +301,19 @@
 			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DA47F78C1C767492008B274F /* CData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DA47F78D1C767492008B274F /* CData.xcdatamodel */,
+			);
+			currentVersion = DA47F78D1C767492008B274F /* CData.xcdatamodel */;
+			path = CData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = DA47F74A1C765598008B274F /* Project object */;
 }

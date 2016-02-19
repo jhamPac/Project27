@@ -7,24 +7,27 @@
 //
 
 import UIKit
+import CoreData
 
 class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
     var objects = [AnyObject]()
+    var managedObjectContext: NSManagedObjectContext!
 
 
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
 
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
-        self.navigationItem.rightBarButtonItem = addButton
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
+        
+        startCoreData()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -35,12 +38,6 @@ class MasterViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-
-    func insertNewObject(sender: AnyObject) {
-        objects.insert(NSDate(), atIndex: 0)
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
 
     // MARK: - Segues
@@ -89,6 +86,50 @@ class MasterViewController: UITableViewController {
         }
     }
 
-
+    // MARK: - Core Data
+    
+    func startCoreData()
+    {
+        let modelURL = NSBundle.mainBundle().URLForResource("CData", withExtension: "momd")!
+        let managedObjectModel = NSManagedObjectModel(contentsOfURL: modelURL)!
+        
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+        
+        // Get a path to app sandbox sqlite file
+        let url = getDocumentDirectory().URLByAppendingPathComponent("CData.sqlite")
+        
+        do
+        {
+            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+            managedObjectContext.persistentStoreCoordinator = coordinator
+        }
+        catch
+        {
+            print("cant save data")
+            return
+        }
+    }
+    
+    func saveContext()
+    {
+        if managedObjectContext.hasChanges
+        {
+            do
+            {
+                try managedObjectContext.save()
+            }
+            catch
+            {
+                print("An error occured while saving: \(error)")
+            }
+        }
+    }
+    
+    func getDocumentDirectory() -> NSURL
+    {
+        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        return urls[0]
+    }
 }
 
