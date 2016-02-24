@@ -31,6 +31,8 @@ class MasterViewController: UITableViewController
         if let split = self.splitViewController
         {
             let controllers = split.viewControllers
+            
+            // Remeber count - 1; Grabbing the last one in array
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
         
@@ -109,6 +111,32 @@ class MasterViewController: UITableViewController
         
         commit.date = formatter.dateFromString(json["commit"]["committer"]["date"].stringValue) ?? NSDate()
         
+        var commitAuthor: Author!
+        
+        // See if this author exists already
+        let authorFetchRequest = NSFetchRequest(entityName: "Author")
+        authorFetchRequest.predicate = NSPredicate(format: "name == %@", argumentArray: [json["commit"]["committer"]["name"].stringValue])
+        
+        if let authors = try? managedObjectContext.executeFetchRequest(authorFetchRequest) as! [Author]
+        {
+            if authors.count > 0
+            {
+                commitAuthor = authors[0]
+            }
+        }
+        
+        // We didn't find that author so create it
+        if commitAuthor == nil
+        {
+            if let author = NSEntityDescription.insertNewObjectForEntityForName("Author", inManagedObjectContext: managedObjectContext) as? Author
+            {
+                author.name = json["commit"]["committer"]["name"].stringValue
+                author.email = json["commit"]["committer"]["email"].stringValue
+                commitAuthor = author
+            }
+        }
+        
+        commit.author = commitAuthor
     }
 
     // MARK: - Table View
@@ -128,7 +156,7 @@ class MasterViewController: UITableViewController
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
         let object = objects[indexPath.row]
         cell.textLabel!.text = object.message
-        cell.detailTextLabel!.text = object.date.description
+        cell.detailTextLabel!.text = "By \(object.author.name) on \(object.date.description)"
         return cell
     }
 
@@ -169,8 +197,8 @@ class MasterViewController: UITableViewController
         
         do
         {
-            // Try to add that store type with coordinator
-            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            // Try to add that store type with coordinator; Lightweight migration in options
+            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true])
             managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
             managedObjectContext.persistentStoreCoordinator = coordinator
             
@@ -227,6 +255,11 @@ class MasterViewController: UITableViewController
         
         ac.addAction(UIAlertAction(title: "Show all commits", style: .Default, handler: { [unowned self] _ in
             self.commitPredicate = nil
+            self.loadSavedData()
+        }))
+        
+        ac.addAction(UIAlertAction(title: "Show only Durian commits", style: .Default, handler: { [unowned self] _ in
+            self.commitPredicate = NSPredicate(format: "author.name == 'Joe Groff'");
             self.loadSavedData()
         }))
         

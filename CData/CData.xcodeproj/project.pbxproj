@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA1B33131C7E6C4A0013237B /* Author+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1B33111C7E6C4A0013237B /* Author+CoreDataProperties.swift */; };
+		DA1B33141C7E6C4A0013237B /* Author.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1B33121C7E6C4A0013237B /* Author.swift */; };
 		DA47F7561C765599008B274F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47F7551C765599008B274F /* AppDelegate.swift */; };
 		DA47F7581C765599008B274F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47F7571C765599008B274F /* MasterViewController.swift */; };
 		DA47F75A1C765599008B274F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47F7591C765599008B274F /* DetailViewController.swift */; };
@@ -20,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DA1B33111C7E6C4A0013237B /* Author+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Author+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DA1B33121C7E6C4A0013237B /* Author.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
 		DA47F7521C765599008B274F /* CData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA47F7551C765599008B274F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DA47F7571C765599008B274F /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -45,6 +49,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DA1B33151C7E6C7F0013237B /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				DA1B33121C7E6C4A0013237B /* Author.swift */,
+				DA1B33111C7E6C4A0013237B /* Author+CoreDataProperties.swift */,
+				DAAAF1D41C77C3E400EC98CF /* Commit.swift */,
+				DAAAF1D31C77C3E400EC98CF /* Commit+CoreDataProperties.swift */,
+				DA47F78C1C767492008B274F /* CData.xcdatamodeld */,
+			);
+			name = CoreData;
+			sourceTree = "<group>";
+		};
 		DA47F7491C765598008B274F = {
 			isa = PBXGroup;
 			children = (
@@ -64,6 +80,7 @@
 		DA47F7541C765599008B274F /* CData */ = {
 			isa = PBXGroup;
 			children = (
+				DA1B33151C7E6C7F0013237B /* CoreData */,
 				DA47F7551C765599008B274F /* AppDelegate.swift */,
 				DA47F7571C765599008B274F /* MasterViewController.swift */,
 				DA47F7591C765599008B274F /* DetailViewController.swift */,
@@ -72,9 +89,6 @@
 				DA47F7601C765599008B274F /* LaunchScreen.storyboard */,
 				DA47F7631C765599008B274F /* Info.plist */,
 				DA47F7691C765648008B274F /* SwiftyJSON.swift */,
-				DA47F78C1C767492008B274F /* CData.xcdatamodeld */,
-				DAAAF1D41C77C3E400EC98CF /* Commit.swift */,
-				DAAAF1D31C77C3E400EC98CF /* Commit+CoreDataProperties.swift */,
 			);
 			path = CData;
 			sourceTree = "<group>";
@@ -151,8 +165,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA1B33131C7E6C4A0013237B /* Author+CoreDataProperties.swift in Sources */,
 				DA47F75A1C765599008B274F /* DetailViewController.swift in Sources */,
 				DA47F7581C765599008B274F /* MasterViewController.swift in Sources */,
+				DA1B33141C7E6C4A0013237B /* Author.swift in Sources */,
 				DAAAF1D61C77C3E400EC98CF /* Commit.swift in Sources */,
 				DA47F7561C765599008B274F /* AppDelegate.swift in Sources */,
 				DA47F78E1C767492008B274F /* CData.xcdatamodeld in Sources */,
