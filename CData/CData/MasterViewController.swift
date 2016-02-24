@@ -9,8 +9,8 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController {
-
+class MasterViewController: UITableViewController
+{
     var detailViewController: DetailViewController? = nil
     var objects = [Commit]()
     var managedObjectContext: NSManagedObjectContext!
@@ -28,7 +28,8 @@ class MasterViewController: UITableViewController {
         let filterButton = UIBarButtonItem(title: "Filter", style: .Plain, target: self, action: "changeFilter")
         navigationItem.rightBarButtonItem = filterButton
 
-        if let split = self.splitViewController {
+        if let split = self.splitViewController
+        {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
@@ -38,21 +39,26 @@ class MasterViewController: UITableViewController {
         performSelectorInBackground("fetchCommits", withObject: nil)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool)
+    {
         self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
     }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Segues
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
+        if segue.identifier == "showDetail"
+        {
+            if let indexPath = self.tableView.indexPathForSelectedRow
+            {
                 let object = objects[indexPath.row]
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
                 controller.detailItem = object
@@ -107,11 +113,13 @@ class MasterViewController: UITableViewController {
 
     // MARK: - Table View
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         return objects.count
     }
 
@@ -124,16 +132,21 @@ class MasterViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    {
         // Return false if you do not want the specified item to be editable.
         return true
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)
+    {
+        if editingStyle == .Delete
+        {
             objects.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
+        }
+        else if editingStyle == .Insert
+        {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
