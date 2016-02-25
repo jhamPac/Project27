@@ -74,7 +74,9 @@ class MasterViewController: UITableViewController
     
     func fetchCommits()
     {
-        let gitHubURL = NSURL(string: "https://api.github.com/repos/apple/swift/commits?per_page=100")!
+        let newestCommitDate = getNewestCommitDate()
+        
+        let gitHubURL = NSURL(string: "https://api.github.com/repos/apple/swift/commits?per_page=100&since=\(newestCommitDate)")!
         
         if let data = NSData(contentsOfURL: gitHubURL)
         {
@@ -95,6 +97,32 @@ class MasterViewController: UITableViewController
                 self.saveContext()
             }
         }
+    }
+    
+    func getNewestCommitDate() -> String
+    {
+        // Create and configure formatter
+        let formatter = NSDateFormatter()
+        formatter.timeZone = NSTimeZone(name: "UTC")
+        formatter.dateFormat = dateFormatISO8601
+        
+        
+        // Create and configure FetchRequest and Sorter for managedObject
+        let newestCommitFetchRequest = NSFetchRequest(entityName: "Commit")
+        let sort = NSSortDescriptor(key: "date", ascending: false)
+        newestCommitFetchRequest.sortDescriptors = [sort]
+        newestCommitFetchRequest.fetchLimit = 1
+        
+        // Even if it returns 1 it will be an array; containing only one so array[0]
+        if let commits = try? managedObjectContext.executeFetchRequest(newestCommitFetchRequest) as! [Commit]
+        {
+            if commits.count > 0
+            {
+                return formatter.stringFromDate(commits[0].date.dateByAddingTimeInterval(1))
+            }
+        }
+        
+        return formatter.stringFromDate(NSDate(timeIntervalSince1970: 0))
     }
     
     func configureCommit(commit: Commit, usingJSON json: JSON)
@@ -170,8 +198,11 @@ class MasterViewController: UITableViewController
     {
         if editingStyle == .Delete
         {
+            let commit = objects[indexPath.row]
+            managedObjectContext.deleteObject(commit)
             objects.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            saveContext()
         }
         else if editingStyle == .Insert
         {
