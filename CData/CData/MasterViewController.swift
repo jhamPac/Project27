@@ -9,11 +9,11 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController
+class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate
 {
     var detailViewController: DetailViewController? = nil
-    var objects = [Commit]()
     var managedObjectContext: NSManagedObjectContext!
+    var fetchedResultsController: NSFetchedResultsController!
     
     // JSON related variables
     let dateFormatISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'"
@@ -61,7 +61,7 @@ class MasterViewController: UITableViewController
         {
             if let indexPath = self.tableView.indexPathForSelectedRow
             {
-                let object = objects[indexPath.row]
+                let object = fetchedResultsController.objectAtIndexPath(indexPath) as! Commit
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
                 controller.detailItem = object
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
@@ -171,18 +171,24 @@ class MasterViewController: UITableViewController
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
-        return 1
+        return fetchedResultsController.sections?.count ?? 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return objects.count
+        let sectionInfo = fetchedResultsController.sections![section]
+        return sectionInfo.numberOfObjects
+    }
+    
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    {
+        return fetchedResultsController.sections![section].name
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        let object = objects[indexPath.row]
+        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Commit
         cell.textLabel!.text = object.message
         cell.detailTextLabel!.text = "By \(object.author.name) on \(object.date.description)"
         return cell
@@ -198,10 +204,8 @@ class MasterViewController: UITableViewController
     {
         if editingStyle == .Delete
         {
-            let commit = objects[indexPath.row]
+            let commit = fetchedResultsController.objectAtIndexPath(indexPath) as! Commit
             managedObjectContext.deleteObject(commit)
-            objects.removeAtIndex(indexPath.row)
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             saveContext()
         }
         else if editingStyle == .Insert
@@ -245,18 +249,23 @@ class MasterViewController: UITableViewController
     
     func loadSavedData()
     {
-        let fetch = NSFetchRequest(entityName: "Commit")
-        let sort = NSSortDescriptor(key: "date", ascending: false)
-        fetch.sortDescriptors = [sort]
-        fetch.predicate = commitPredicate
+        if fetchedResultsController == nil
+        {
+            let fetch = NSFetchRequest(entityName: "Commit")
+            let sort = NSSortDescriptor(key: "date", ascending: false)
+            fetch.sortDescriptors = [sort]
+            fetch.fetchBatchSize = 20
+            
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: fetch, managedObjectContext: managedObjectContext, sectionNameKeyPath: "author.name", cacheName: nil)
+            fetchedResultsController.delegate = self
+        }
+        
+        fetchedResultsController.fetchRequest.predicate = commitPredicate
         
         do
         {
-            if let commits = try managedObjectContext.executeFetchRequest(fetch) as? [Commit]
-            {
-                objects = commits
-                tableView.reloadData()
-            }
+            try fetchedResultsController.performFetch()
+            tableView.reloadData()
         }
         catch
         {
@@ -317,6 +326,18 @@ class MasterViewController: UITableViewController
     {
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
         return urls[0]
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?)
+    {
+        switch type {
+        case .Delete:
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
+        
+        
+        default:
+            break
+        }
     }
 }
 

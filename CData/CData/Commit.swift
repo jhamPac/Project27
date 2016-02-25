@@ -10,8 +10,7 @@ import Foundation
 import CoreData
 
 
-class Commit: NSManagedObject {
-
-// Insert code here to add functionality to your managed object subclass
-
+class Commit: NSManagedObject
+{
+    
 }
